@@ -41,3 +41,30 @@ Question: can a small flow-based classifier, quantized to FP8 (E4M3), stay accur
 - Simulation only; no fabricated hardware.
 - One dataset (CIC-IDS2017) and one model family so far.
 - CIC-IDS2017 is replayed through a custom flow pipeline, so results are not directly comparable to published numbers using CICFlowMeter features.
+
+## Repository map
+
+Scripts are run from the repo root (they read and write files by relative path).
+
+**Level 1 (live detection)**
+- `capture.py`: Scapy capture and flow aggregation (also reused by the replay scripts)
+- `rules.py`: detection rules
+- `main.py`: runs capture and rules, writes `dashboard_state.json` and `flow_log.jsonl`
+- `dashboard.py`: Streamlit dashboard reading `dashboard_state.json`
+- `run_attacks.sh`: runs attacks against the VM and logs start/end times to `attack_log.csv`
+- `label_flows.py`: joins `flow_log.jsonl` with `attack_log.csv` into `training_data.csv`
+
+**Level 2 (ML on CIC-IDS2017)**
+- `replay_pcap.py`, `capture_cic.py`, `cic_replay.py`: replay CIC-IDS2017 pcaps through the flow pipeline, with labels from the dataset CSVs
+- `build_training_csv.py`: flow records to `training_data.csv`
+- `train_model_v3.py`: trains the classifier, saving `.joblib` and `_weights.json`
+- `apply_model.py`: applies a trained model to a flows file
+- `quantize_eval.py`: FP8 quantization and noise-injection evaluation (`--noise-model product|fullscale`)
+- `quantize_weights.py`, `evaluate_curves.py`: FP8 check and PR/ROC curves for the original VM-dataset model (`model.joblib`, `scaler.joblib`)
+
+**Folders**
+- `baseline_v1/`: frozen baseline model (`model_v3_lean_seen`) used by `quantize_eval.py`
+- `results/`: quantization result CSVs and evaluation plot
+- `archive/`: superseded model versions and early training scripts
+
+Large data (CIC-IDS2017 pcaps and replayed flow files) is not in this repo; download CIC-IDS2017 separately into `cic_data/`.

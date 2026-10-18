@@ -4,7 +4,7 @@ Use it on data the model never touched: Monday (all benign -> pure false-positiv
 check) or the VM flow log (cross-dataset). If the file has attack labels it also
 reports recall per label.
 
-  python3 apply_model.py --model model_v3_lean_seen.joblib --flows monday_flows_5s.jsonl
+  python3 apply_model.py --model baseline_v1/model_v3_lean_seen.joblib --flows monday_flows_5s.jsonl
 """
 import argparse, json, collections
 import numpy as np
