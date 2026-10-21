@@ -35,7 +35,7 @@ Question: can a small flow-based classifier, quantized to FP8 (E4M3), stay accur
 **CIM macro.** The macro is a 4x4 mantissa-precision design from Prof. Weidong Cao's lab. It is simulated at SPICE level (Xschem + ngspice, sky130); the simulation files are kept outside this repo. What has and has not been done:
 - The published error figure (~1.5% MAC error) belongs to the lab's own design. It has **not** been measured on my netlist.
 - My current netlist uses a simplified capacitor array. Under multi-row activation it returns the bitwise AND of stored codes rather than a sum, so it does not yet match the lab's intended topology. I am confirming the intended design with the lab and will rebuild that stage.
-- Classifier accuracy under measured macro error is **not yet evaluated**.
+- Applying the readout error of the single-row path of my netlist to the FP8 weights costs no detectable recall (75.9% vs 76.4% at 1% FPR; only 195 test attacks, so about ±6 points of uncertainty). Activation-side error and the lab macro itself are **not yet evaluated**.
 
 ## Limitations
 - Simulation only; no fabricated hardware.
