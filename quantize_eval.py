@@ -166,6 +166,15 @@ def main():
               f"{m['rec0.1%']:.3f} / {m['fpr0.1%']:.3%}  |  {flips}")
         rows.append({"config": name, "sigma_pct": 0, "trials": 1, **{k: v for k, v in m.items()}})
 
+    # ---- FIXED threshold: picked on the FLOAT scores, never recalibrated for the hardware ----
+    print("\nFIXED THRESHOLD from the float model (no recalibration)")
+    print(f"intercept b = {b:+.4f}   float thresholds: " + ", ".join(f"{k} -> {v:+.4f}" for k, v in thr_by["float"].items()))
+    print("  config                 recall / FPR @1%   | recall / FPR @0.1%")
+    for name in ("fp8w", "fp8wx", "macro_w", "macro_wx"):
+        m = metrics(configs[name][test], thr_by["float"])
+        print(f"  {name:22s} {m['rec1%']:.3f} / {m['fpr1%']:.3%}  |  {m['rec0.1%']:.3f} / {m['fpr0.1%']:.3%}")
+        rows.append({"config": name + "_fixedthr", "sigma_pct": 0, "trials": 1, **m})
+
     # ---- noise sweep on the FP8 weights + FP8 inputs configuration ----
     P = (Zq * wq)[test]                       # the individual products w_i * z_i
     FS = float(np.percentile(np.abs((Zq * wq)[fit].sum(1)), 99.9))
