@@ -18,10 +18,10 @@ from scapy.all import sniff
 import capture
 import rules
 
-CHECK_INTERVAL = 5       # seconds between rule-evaluation passes
+CHECK_INTERVAL = 5       # time itnerval btw rulevaluation passes ( seconds) 
 STATE_FILE = "dashboard_state.json"
 FLOW_LOG_FILE = "flow_log.jsonl"
-HISTORY_LENGTH = 200     # number of check-cycles to keep for the time-series chart
+HISTORY_LENGTH = 200     # number of check cycles to keep for the time series chart
 RECENT_FLOWS_LIMIT = 100  # number of recent flows to show in the dashboard table
 
 history = deque(maxlen=HISTORY_LENGTH)  # each entry: {time, packets, flows, flagged}
@@ -31,7 +31,6 @@ recent_flows = deque(maxlen=RECENT_FLOWS_LIMIT)
 
 def sniffer_thread():
     sniff(prn=capture.handle_packet, store=False, iface="bridge100")
-
 
 def flow_to_dict(flow):
     """Turns a flow dict (with a python set for ports) into something JSON-safe."""
