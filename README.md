@@ -37,6 +37,9 @@ Question: can a small flow-based classifier, quantized to FP8 (E4M3), stay accur
 - My current netlist uses a simplified capacitor array. Under multi-row activation it returns the bitwise AND of stored codes rather than a sum, so it does not yet match the lab's intended topology. I am confirming the intended design with the lab and will rebuild that stage.
 - Applying the readout error of the single-row path of my netlist to the FP8 weights costs no detectable recall (75.9% vs 76.4% at 1% FPR; only 195 test attacks, so about ±6 points of uncertainty). Activation-side error and the lab macro itself are **not yet evaluated**.
 
+## Development note
+Developed with AI coding assistance (Claude). I chose the experiments, ran the SPICE simulations and the evaluations, and checked the results; the limitations below are stated so the claims can be checked.
+
 ## Limitations
 - Simulation only; no fabricated hardware.
 - One dataset (CIC-IDS2017) and one model family so far.
